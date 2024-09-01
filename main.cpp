@@ -6,12 +6,12 @@
 #include "ray.h"
 
 vec3 ray_colour(const ray& r);
-bool hit_sphere(const vec3& centre, double radius, const ray& r);
+double hit_sphere(const vec3& centre, double radius, const ray& r);
 
 int main() {
     // Image
     double aspect_ratio{ 16.0 / 9.0 };
-    int image_width{ 1280 };
+    int image_width{ 400 };
 
     // Calculate image height, ensure that it's at least 1
     int image_height{ static_cast<int>(image_width / aspect_ratio) };
@@ -57,20 +57,27 @@ int main() {
 }
 
 vec3 ray_colour(const ray& r) {
-    if (hit_sphere(vec3(0,0,-1), 0.25, r))
-        return vec3(1, 0, 0);
+    double t = hit_sphere(vec3( 0, 0, -1), 0.5, r);
+    if (t > 0.0) {
+        vec3 n = unit_vector(r.at(t) - vec3(0, 0, -1));
+        return 0.5 * vec3{n.x() + 1, n.y() + 1, n.z() + 1};
+    }
 
     vec3 unit_direction = unit_vector(r.direction());
     auto a = 0.5 * (unit_direction.y() + 1.0);
     return (1.0 - a) * vec3(1.0, 1.0, 1.0) + a * vec3(0.5, 0.7, 1.0);
 }
 
-bool hit_sphere(const vec3& centre, double radius, const ray& r) {
+double hit_sphere(const vec3& centre, double radius, const ray& r) {
     vec3 oc = centre - r.origin();
     auto a = dot(r.direction(), r.direction());
     auto b = -2.0 * dot(r.direction(), oc);
     auto c = dot(oc, oc) - radius * radius;
     auto discriminant = b * b - 4 * a * c;
 
-    return (discriminant >= 0);
+    if(discriminant < 0) {
+        return -1.0;
+    } else {
+        return (-b - std::sqrt(discriminant)) / (2.0 * a);
+    }
 }
