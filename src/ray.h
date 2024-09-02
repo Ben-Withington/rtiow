@@ -5,17 +5,17 @@
 
 class Ray {
     private:
-        vec3 m_origin;
-        vec3 m_direction;
+        Vec3 m_origin;
+        Vec3 m_direction;
     
     public:
         Ray();
-        Ray(const vec3& origin, const vec3& direction);
+        Ray(const Vec3& origin, const Vec3& direction);
 
-        const vec3& origin() const;
-        const vec3& direction() const;
+        const Vec3& origin() const;
+        const Vec3& direction() const;
 
-        vec3 at(double t) const;
+        Vec3 at(double t) const;
 };
 
 #endif // RAY_H

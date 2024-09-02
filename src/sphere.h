@@ -6,11 +6,11 @@
 
 class Sphere : public Hittable {
     private:
-        vec3 centre;
+        Vec3 centre;
         double radius;
 
     public:
-        Sphere(const vec3& centre, double radius);
+        Sphere(const Vec3& centre, double radius);
 
         bool hit(const Ray& r, Interval interval, HitRecord& rec) const override;
 };

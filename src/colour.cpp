@@ -2,7 +2,7 @@
 
 
 namespace render {
-    void write_colour(std::ostream& out, const vec3& pixel_colour) {
+    void write_colour(std::ostream& out, const Vec3& pixel_colour) {
         double red   = pixel_colour.x();
         double green = pixel_colour.y();
         double blue  = pixel_colour.z();

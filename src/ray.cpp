@@ -2,18 +2,18 @@
 
 Ray::Ray() {}
 
-Ray::Ray(const vec3 &origin, const vec3 &direction)
+Ray::Ray(const Vec3 &origin, const Vec3 &direction)
     : m_origin{origin}, m_direction{direction} {}
 
-const vec3& Ray::origin() const
+const Vec3& Ray::origin() const
 {
     return m_origin;
 }
 
-const vec3& Ray::direction() const {
+const Vec3& Ray::direction() const {
     return m_direction;
 }
 
-vec3 Ray::at(double t) const {
+Vec3 Ray::at(double t) const {
     return m_origin + (t * m_direction);
 }
