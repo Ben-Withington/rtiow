@@ -3,14 +3,14 @@
 
 #include "vec3.h"
 
-class ray {
+class Ray {
     private:
         vec3 m_origin;
         vec3 m_direction;
     
     public:
-        ray();
-        ray(const vec3& origin, const vec3& direction);
+        Ray();
+        Ray(const vec3& origin, const vec3& direction);
 
         const vec3& origin() const;
         const vec3& direction() const;

@@ -1,22 +1,22 @@
 #include "hittable_list.h"
 
-hittable_list::hittable_list() {}
+HittableList::HittableList() {}
 
-hittable_list::hittable_list(std::shared_ptr<hittable> object) {
+HittableList::HittableList(std::shared_ptr<Hittable> object) {
     this->add(object);
 }
 
-void hittable_list::clear() {
+void HittableList::clear() {
     this->objects.clear();
 }
 
-void hittable_list::add(std::shared_ptr<hittable> object) {
+void HittableList::add(std::shared_ptr<Hittable> object) {
     this->objects.emplace_back(object);
 }
 
-bool hittable_list::hit(const ray& r, Interval interval, hit_record& rec) const
+bool HittableList::hit(const Ray& r, Interval interval, HitRecord& rec) const
 {
-    hit_record temp_rec;
+    HitRecord temp_rec;
     bool hit_anything = false;
     double closest_so_far = interval.max;
 

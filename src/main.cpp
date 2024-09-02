@@ -9,7 +9,7 @@
 #include "hittable_list.h"
 #include "sphere.h"
 
-vec3 ray_colour(const ray& r, const hittable& world);
+vec3 ray_colour(const Ray& r, const Hittable& world);
 
 int main() {
     // Image
@@ -22,9 +22,9 @@ int main() {
 
     // World
 
-    hittable_list world;
-    world.add(std::make_shared<sphere>(vec3{0, 0, -1}, 0.5));
-    world.add(std::make_shared<sphere>(vec3{0, -100.5, -1}, 100.0));
+    HittableList world;
+    world.add(std::make_shared<Sphere>(vec3{0, 0, -1}, 0.5));
+    world.add(std::make_shared<Sphere>(vec3{0, -100.5, -1}, 100.0));
 
     // Camera
 
@@ -54,7 +54,7 @@ int main() {
 
             vec3 pixel_centre = pixel00_location + (i * pixel_delta_u) + (j * pixel_delta_v);
             vec3 ray_direction = pixel_centre - camera_centre;
-            ray r{camera_centre, ray_direction};
+            Ray r{camera_centre, ray_direction};
 
             vec3 pixel_colour = ray_colour(r, world);
 
@@ -65,8 +65,8 @@ int main() {
     std::clog << "\rDone.                 \n";
 }
 
-vec3 ray_colour(const ray& r, const hittable& world) {
-    hit_record rec;
+vec3 ray_colour(const Ray& r, const Hittable& world) {
+    HitRecord rec;
 
     if(world.hit(r, { 0, std::numeric_limits<double>::infinity() }, rec)) {
         return 0.5 * (rec.normal + vec3{ 1, 1, 1 });

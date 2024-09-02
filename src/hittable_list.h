@@ -6,17 +6,17 @@
 #include <memory>
 #include <vector>
 
-class hittable_list : public hittable {
+class HittableList : public Hittable {
     public:
-        std::vector<std::shared_ptr<hittable>> objects{};
+        std::vector<std::shared_ptr<Hittable>> objects{};
 
-        hittable_list();
-        hittable_list(std::shared_ptr<hittable> object);
+        HittableList();
+        HittableList(std::shared_ptr<Hittable> object);
 
         void clear();
-        void add(std::shared_ptr<hittable> object);
+        void add(std::shared_ptr<Hittable> object);
         
-        bool hit(const ray& r, Interval interval, hit_record& rec) const override;
+        bool hit(const Ray& r, Interval interval, HitRecord& rec) const override;
 };
 
 #endif // HITTABLE_LIST_H

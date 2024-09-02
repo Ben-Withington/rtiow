@@ -1,10 +1,10 @@
 #include "sphere.h"
 #include <cmath>
 
-sphere::sphere(const vec3 &centre, double radius)
+Sphere::Sphere(const vec3 &centre, double radius)
     : centre{centre}, radius{std::fmax(0, radius)} {}
 
-bool sphere::hit(const ray &r, Interval interval, hit_record &rec) const {
+bool Sphere::hit(const Ray &r, Interval interval, HitRecord &rec) const {
 
     vec3 oc{ this->centre - r.origin() };
     double a{ r.direction().length_squared() };
