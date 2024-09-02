@@ -1,8 +1,8 @@
 #include "sphere.h"
 #include <cmath>
 
-Sphere::Sphere(const Vec3 &centre, double radius)
-    : centre{centre}, radius{std::fmax(0, radius)} {}
+Sphere::Sphere(const Vec3 &centre, double radius, std::shared_ptr<Material> mat)
+    : centre{centre}, radius{std::fmax(0, radius)}, mat{mat} {}
 
 bool Sphere::hit(const Ray &r, Interval interval, HitRecord &rec) const {
 
@@ -30,6 +30,7 @@ bool Sphere::hit(const Ray &r, Interval interval, HitRecord &rec) const {
     rec.point = r.at(rec.t);
     Vec3 outward_normal = (rec.point - this->centre) / radius;
     rec.set_face_normal(r, outward_normal);
-
+    rec.mat = this->mat;
+ 
     return true;
 }

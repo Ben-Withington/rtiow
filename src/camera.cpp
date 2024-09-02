@@ -1,6 +1,7 @@
 #include "camera.h"
 #include "colour.h"
 #include "utility.h"
+#include "material.h"
 
 Camera::Camera(double aspectRatio, int imageWidth, int samplesPerPixel, int maxDepth)
     : aspectRatio{aspectRatio}, 
@@ -60,14 +61,17 @@ Vec3 Camera::rayColour(const Ray &r, const Hittable &world, int depth) const
     HitRecord rec;
 
     if(world.hit(r, { 0.001, std::numeric_limits<double>::infinity() }, rec)) {
-        // Vec3 direction = randomOnHemiSphere(rec.normal);
-        Vec3 direction = rec.normal + randomUnitVector();
-        return 0.5 * rayColour({rec.point, direction}, world, depth - 1);
+        Ray scattered{};
+        Vec3 attenuation{};
+        if(rec.mat->scatter(r, rec, attenuation, scattered)) {
+            return attenuation * rayColour(scattered, world, depth -1);
+        }
+        return { 0, 0 , 0 };
     }
 
     Vec3 unit_direction = unit_vector(r.direction());
     auto a = 0.5 * (unit_direction.y() + 1.0);
-    return (1.0 - a) * Vec3(1.0, 1.0, 1.0) + a * Vec3(0.5, 0.7, 1.0);
+    return (1.0 - a) * Vec3(1.0, 1.0, 1.0) + a * Vec3(0.2, 0.2, 1.0);
 }
 
 Ray Camera::getRay(int i, int j) const

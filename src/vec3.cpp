@@ -51,6 +51,14 @@ double Vec3::length_squared() const {
             vertices[2] * vertices[2];
 }
 
+bool Vec3::nearZero() const
+{
+    auto s = 1e-8;
+    return (std::fabs(vertices[0]) < s) && 
+           (std::fabs(vertices[1]) < s) && 
+           (std::fabs(vertices[2]) < s);
+}
+
 Vec3 Vec3::random()
 {
     return 

@@ -27,6 +27,8 @@ public:
     double length() const;
     double length_squared() const;
 
+    bool nearZero() const;
+
     static Vec3 random();
     static Vec3 random(double min, double max);
 
@@ -85,6 +87,10 @@ inline Vec3 randomUnitVector() {
 inline Vec3 randomOnHemiSphere(const Vec3& normal) {
     Vec3 onUnitSphere = randomUnitVector();
     return dot(onUnitSphere, normal) > 0.0 ? onUnitSphere : -onUnitSphere;
+}
+
+inline Vec3 reflect(const Vec3& v, const Vec3& n) {
+    return v - 2 * dot(v, n) * n;
 }
 
 #endif // VEC3_H
