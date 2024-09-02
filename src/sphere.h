@@ -12,7 +12,7 @@ class sphere : public hittable {
     public:
         sphere(const vec3& centre, double radius);
 
-        bool hit(const ray& r, double ray_t_min, double ray_t_max, hit_record& rec);
+        bool hit(const ray& r, double ray_t_min, double ray_t_max, hit_record& rec) const override;
 };
 
 #endif // SPHERE_H

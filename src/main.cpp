@@ -1,12 +1,15 @@
 #include <iostream>
 #include <cmath>
+#include <limits>
 
 #include "vec3.h"
 #include "colour.h"
 #include "ray.h"
+#include "hittable.h"
+#include "hittable_list.h"
+#include "sphere.h"
 
-vec3 ray_colour(const ray& r);
-double hit_sphere(const vec3& centre, double radius, const ray& r);
+vec3 ray_colour(const ray& r, const hittable& world);
 
 int main() {
     // Image
@@ -16,6 +19,12 @@ int main() {
     // Calculate image height, ensure that it's at least 1
     int image_height{ static_cast<int>(image_width / aspect_ratio) };
     image_height = (image_height < 0) ? 1 : image_height;
+
+    // World
+
+    hittable_list world;
+    world.add(std::make_shared<sphere>(vec3{0, 0, -1}, 0.5));
+    world.add(std::make_shared<sphere>(vec3{0, -100.5, -1}, 100.0));
 
     // Camera
 
@@ -47,7 +56,7 @@ int main() {
             vec3 ray_direction = pixel_centre - camera_centre;
             ray r{camera_centre, ray_direction};
 
-            vec3 pixel_colour = ray_colour(r);
+            vec3 pixel_colour = ray_colour(r, world);
 
             render::write_colour(std::cout, pixel_colour);
         }
@@ -56,28 +65,14 @@ int main() {
     std::clog << "\rDone.                 \n";
 }
 
-vec3 ray_colour(const ray& r) {
-    double t = hit_sphere(vec3( 0, 0, -1), 0.5, r);
-    if (t > 0.0) {
-        vec3 n = unit_vector(r.at(t) - vec3(0, 0, -1));
-        return 0.5 * vec3{n.x() + 1, n.y() + 1, n.z() + 1};
+vec3 ray_colour(const ray& r, const hittable& world) {
+    hit_record rec;
+
+    if(world.hit(r, 0, std::numeric_limits<double>::infinity(), rec)) {
+        return 0.5 * (rec.normal + vec3{ 1, 1, 1 });
     }
 
     vec3 unit_direction = unit_vector(r.direction());
     auto a = 0.5 * (unit_direction.y() + 1.0);
     return (1.0 - a) * vec3(1.0, 1.0, 1.0) + a * vec3(0.5, 0.7, 1.0);
-}
-
-double hit_sphere(const vec3& centre, double radius, const ray& r) {
-    vec3 oc = centre - r.origin();
-    auto a = r.direction().length_squared();
-    auto h = dot(r.direction(), oc);
-    auto c = oc.length_squared() - radius * radius;
-    auto discriminant = h * h - a * c;
-
-    if(discriminant < 0) {
-        return -1.0;
-    } else {
-        return (h - std::sqrt(discriminant)) / a;
-    }
 }
