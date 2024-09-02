@@ -16,7 +16,7 @@ class hittable_list : public hittable {
         void clear();
         void add(std::shared_ptr<hittable> object);
         
-        bool hit(const ray& r, double ray_t_min, double ray_t_max, hit_record& rec) const override;
+        bool hit(const ray& r, Interval interval, hit_record& rec) const override;
 };
 
 #endif // HITTABLE_LIST_H

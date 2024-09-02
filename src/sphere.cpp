@@ -4,7 +4,7 @@
 sphere::sphere(const vec3 &centre, double radius)
     : centre{centre}, radius{std::fmax(0, radius)} {}
 
-bool sphere::hit(const ray &r, double ray_t_min, double ray_t_max, hit_record &rec) const {
+bool sphere::hit(const ray &r, Interval interval, hit_record &rec) const {
 
     vec3 oc{ this->centre - r.origin() };
     double a{ r.direction().length_squared() };
@@ -19,9 +19,9 @@ bool sphere::hit(const ray &r, double ray_t_min, double ray_t_max, hit_record &r
 
     // Find the nearest root that lies in the acceptable range.
     double root = (h - sqrtd) / a;
-    if(root <= ray_t_min || ray_t_max <= root) {
+    if(!interval.surrounds(root)) {
         root = (h + sqrtd) / a;
-        if(root <= ray_t_min || ray_t_max <= root) {
+        if(!interval.surrounds(root)) {
             return false;
         }
     }

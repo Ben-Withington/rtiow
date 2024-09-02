@@ -2,6 +2,6 @@
 
 To run
 
-```g++ -o out/rt *.cpp  && ./out/rt > ./out/image.ppm```
+```g++ -o out/rt src/*.cpp  && ./out/rt > ./out/image.ppm```
 
 open ```./out/image.ppm``` with image viewer

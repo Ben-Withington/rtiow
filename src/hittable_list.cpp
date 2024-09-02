@@ -14,14 +14,14 @@ void hittable_list::add(std::shared_ptr<hittable> object) {
     this->objects.emplace_back(object);
 }
 
-bool hittable_list::hit(const ray &r, double ray_t_min, double ray_t_max, hit_record &rec) const
+bool hittable_list::hit(const ray& r, Interval interval, hit_record& rec) const
 {
     hit_record temp_rec;
     bool hit_anything = false;
-    double closest_so_far = ray_t_max;
+    double closest_so_far = interval.max;
 
     for(const auto& object : this->objects) {
-        if(object->hit(r, ray_t_min, closest_so_far, temp_rec)) {
+        if(object->hit(r, Interval{ interval.min, closest_so_far }, temp_rec)) {
             hit_anything = true;
             closest_so_far = temp_rec.t;
             rec = temp_rec;
