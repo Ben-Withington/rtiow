@@ -6,7 +6,7 @@
 #include <iostream>
 
 namespace render {
-    void write_colour(std::ostream& out, const vec3& pixel_colour);
+    void write_colour(std::ostream& out, const Vec3& pixel_colour);
 }
 
 #endif // COLOUR_H

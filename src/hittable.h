@@ -6,12 +6,12 @@
 
 class HitRecord {
     public:
-        vec3 point;
-        vec3 normal;
+        Vec3 point;
+        Vec3 normal;
         double t;
         bool front_face;
 
-        void set_face_normal(const Ray& r, const vec3& outward_normal);
+        void set_face_normal(const Ray& r, const Vec3& outward_normal);
 };
 
 class Hittable {
