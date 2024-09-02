@@ -2,8 +2,12 @@
 #include "colour.h"
 #include "utility.h"
 
-Camera::Camera(double aspectRatio, int imageWidth, int samplesPerPixel)
-    : aspectRatio{aspectRatio}, imageWidth{imageWidth}, samplesPerPixel{samplesPerPixel} {}
+Camera::Camera(double aspectRatio, int imageWidth, int samplesPerPixel, int maxDepth)
+    : aspectRatio{aspectRatio}, 
+        imageWidth{imageWidth}, 
+        samplesPerPixel{samplesPerPixel}, 
+        maxDepth{maxDepth} 
+{}
 
 void Camera::render(const Hittable& world) {
     this->initialise();
@@ -19,7 +23,7 @@ void Camera::render(const Hittable& world) {
 
             for(int sample{ 0 }; sample < samplesPerPixel; ++sample) {
                 Ray r{ this->getRay(i, j) };
-                pixelColour += this->rayColour(r, world);
+                pixelColour += this->rayColour(r, world, maxDepth);
             }
 
             render::write_colour(std::cout, pixelColour / static_cast<double>(samplesPerPixel));
@@ -49,12 +53,15 @@ void Camera::initialise() {
     pixel00Location = viewportUpperLeft + 0.5 * (pixelDeltaU + pixelDeltaV);
 }
 
-Vec3 Camera::rayColour(const Ray &r, const Hittable &world) const
+Vec3 Camera::rayColour(const Ray &r, const Hittable &world, int depth) const
 {
+    if(depth <= 0) return { 0, 0, 0 };
+
     HitRecord rec;
 
     if(world.hit(r, { 0, std::numeric_limits<double>::infinity() }, rec)) {
-        return 0.5 * (rec.normal + Vec3{ 1, 1, 1 });
+        Vec3 direction = randomOnHemiSphere(rec.normal);
+        return 0.5 * rayColour({rec.point, direction}, world, depth - 1);
     }
 
     Vec3 unit_direction = unit_vector(r.direction());

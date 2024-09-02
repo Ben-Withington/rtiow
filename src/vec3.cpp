@@ -1,5 +1,6 @@
 #include <cmath>
 #include "vec3.h"
+#include "utility.h"
 
 Vec3::Vec3() : vertices{0, 0, 0} {}
 
@@ -48,6 +49,26 @@ double Vec3::length_squared() const {
     return vertices[0] * vertices[0] + 
             vertices[1] * vertices[1] + 
             vertices[2] * vertices[2];
+}
+
+Vec3 Vec3::random()
+{
+    return 
+    { 
+        utility::randomDouble(), 
+        utility::randomDouble(), 
+        utility::randomDouble()
+    };
+}
+
+Vec3 Vec3::random(double min, double max)
+{
+    return 
+    { 
+        utility::randomDouble(min, max), 
+        utility::randomDouble(min, max), 
+        utility::randomDouble(min, max)
+    };
 }
 
 std::ostream& operator<<(std::ostream& out, const Vec3& vec) {

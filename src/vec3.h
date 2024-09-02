@@ -2,6 +2,7 @@
 #define VEC3_H
 
 #include <iostream>
+#include <cmath>
 
 class Vec3 {
 private:
@@ -25,6 +26,9 @@ public:
 
     double length() const;
     double length_squared() const;
+
+    static Vec3 random();
+    static Vec3 random(double min, double max);
 
     friend std::ostream& operator<<(std::ostream& out, const Vec3& vec);
 };
@@ -67,6 +71,20 @@ inline Vec3 cross(const Vec3& u, const Vec3& v) {
 
 inline Vec3 unit_vector(const Vec3& vec) {
     return vec / vec.length();
+}
+
+inline Vec3 randomUnitVector() {
+    while(true) {
+        Vec3 p = Vec3::random(-1, 1);
+        double lensq = p.length_squared();
+        if(1e-160 < lensq && lensq <= 1) 
+            return p / std::sqrt(lensq);
+    }
+}
+
+inline Vec3 randomOnHemiSphere(const Vec3& normal) {
+    Vec3 onUnitSphere = randomUnitVector();
+    return dot(onUnitSphere, normal) > 0.0 ? onUnitSphere : -onUnitSphere;
 }
 
 #endif // VEC3_H

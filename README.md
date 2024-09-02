@@ -4,4 +4,4 @@ To run
 
 ```g++ -o out/rt -std=c++20 src/*.cpp && ./out/rt > ./out/image.ppm```
 
-open ```./out/image.ppm``` with image viewer
+open ```./out/image.ppm``` with an image viewer

@@ -6,7 +6,7 @@
 
 class Camera {
     public:
-        Camera(double aspectRatio = 1.0, int imageWidth = 100, int  = 10);
+        Camera(double aspectRatio = 1.0, int imageWidth = 100, int samplesPerPixel = 10, int maxDepth = 10);
 
         void render(const Hittable& world);
 
@@ -19,9 +19,10 @@ class Camera {
         Vec3 pixel00Location;
         Vec3 pixelDeltaU;
         Vec3 pixelDeltaV;
+        int maxDepth;
 
         void initialise();
-        Vec3 rayColour(const Ray& r, const Hittable& world) const;
+        Vec3 rayColour(const Ray& r, const Hittable& world, int depth) const;
         Ray getRay(int i, int j) const;
         Vec3 sampleSqure() const;
 };
