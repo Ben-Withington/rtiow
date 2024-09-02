@@ -59,8 +59,9 @@ Vec3 Camera::rayColour(const Ray &r, const Hittable &world, int depth) const
 
     HitRecord rec;
 
-    if(world.hit(r, { 0, std::numeric_limits<double>::infinity() }, rec)) {
-        Vec3 direction = randomOnHemiSphere(rec.normal);
+    if(world.hit(r, { 0.001, std::numeric_limits<double>::infinity() }, rec)) {
+        // Vec3 direction = randomOnHemiSphere(rec.normal);
+        Vec3 direction = rec.normal + randomUnitVector();
         return 0.5 * rayColour({rec.point, direction}, world, depth - 1);
     }
 

@@ -17,6 +17,6 @@ int main() {
     world.add(std::make_shared<Sphere>(Vec3{0, -100.5, -1}, 100.0));
 
     // Camera
-    Camera cam{ 16.0 / 9.0, 400 };
+    Camera cam{ 16.0 / 9.0, 650 };
     cam.render(world);
 }

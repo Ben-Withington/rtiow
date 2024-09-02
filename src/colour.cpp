@@ -1,12 +1,13 @@
 #include "colour.h"
 #include "interval.h"
+#include <cmath>
 
 
 namespace render {
     void write_colour(std::ostream& out, const Vec3& pixel_colour) {
-        double red   = pixel_colour.x();
-        double green = pixel_colour.y();
-        double blue  = pixel_colour.z();
+        double red   = linearToGamma(pixel_colour.x());
+        double green = linearToGamma(pixel_colour.y());
+        double blue  = linearToGamma(pixel_colour.z());
 
         static const Interval intensity{0.000, 0.999};
 
@@ -15,5 +16,9 @@ namespace render {
         int bbyte = static_cast<int>(256 * intensity.clamp(blue));
 
         out << rbyte << ' ' << gbyte << ' ' << bbyte << '\n';
+    }
+    double linearToGamma(double linearComponent)
+    {
+        return (linearComponent > 0) ? std::sqrt(linearComponent) : 0.0;
     }
 }
