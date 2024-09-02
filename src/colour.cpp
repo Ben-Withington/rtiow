@@ -1,4 +1,5 @@
 #include "colour.h"
+#include "interval.h"
 
 
 namespace render {
@@ -7,9 +8,11 @@ namespace render {
         double green = pixel_colour.y();
         double blue  = pixel_colour.z();
 
-        int rbyte = static_cast<int>(255.999 * red);
-        int gbyte = static_cast<int>(255.999 * green);
-        int bbyte = static_cast<int>(255.999 * blue);
+        static const Interval intensity{0.000, 0.999};
+
+        int rbyte = static_cast<int>(256 * intensity.clamp(red));
+        int gbyte = static_cast<int>(256 * intensity.clamp(green));
+        int bbyte = static_cast<int>(256 * intensity.clamp(blue));
 
         out << rbyte << ' ' << gbyte << ' ' << bbyte << '\n';
     }

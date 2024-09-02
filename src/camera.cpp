@@ -1,8 +1,9 @@
 #include "camera.h"
 #include "colour.h"
+#include "utility.h"
 
-Camera::Camera(double aspectRatio, int imageWidth)
-    : aspectRatio{aspectRatio}, imageWidth{imageWidth} {}
+Camera::Camera(double aspectRatio, int imageWidth, int samplesPerPixel)
+    : aspectRatio{aspectRatio}, imageWidth{imageWidth}, samplesPerPixel{samplesPerPixel} {}
 
 void Camera::render(const Hittable& world) {
     this->initialise();
@@ -13,12 +14,15 @@ void Camera::render(const Hittable& world) {
     for(int j = 0; j < imageHeight; ++j) {
         std::clog << "\rScanlines remaining: " << (imageHeight - j) << ' ' << std::flush;
         for(int i = 0; i < imageWidth; ++i) {
+            
+            Vec3 pixelColour{ 0, 0, 0 };
 
-            Vec3 pixelCentre = pixel00Location + (i * pixelDeltaU) + (j * pixelDeltaV);
-            Vec3 rayDirection = pixelCentre - centre;
-            Ray r{centre, rayDirection};
+            for(int sample{ 0 }; sample < samplesPerPixel; ++sample) {
+                Ray r{ this->getRay(i, j) };
+                pixelColour += this->rayColour(r, world);
+            }
 
-            render::write_colour(std::cout, this->rayColour(r, world));
+            render::write_colour(std::cout, pixelColour / static_cast<double>(samplesPerPixel));
         }
     }
 
@@ -56,4 +60,18 @@ Vec3 Camera::rayColour(const Ray &r, const Hittable &world) const
     Vec3 unit_direction = unit_vector(r.direction());
     auto a = 0.5 * (unit_direction.y() + 1.0);
     return (1.0 - a) * Vec3(1.0, 1.0, 1.0) + a * Vec3(0.5, 0.7, 1.0);
+}
+
+Ray Camera::getRay(int i, int j) const
+{
+    Vec3 offset = sampleSqure();
+    Vec3 pixelSample = pixel00Location 
+                        + ((i + offset.x()) * pixelDeltaU) 
+                        + ((j + offset.x()) * pixelDeltaV);
+    
+    return {centre, pixelSample - centre};
+}
+
+Vec3 Camera::sampleSqure() const {
+    return { utility::randomDouble() - 0.5, utility::randomDouble() - 0.5, 0};
 }
