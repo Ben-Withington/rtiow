@@ -57,6 +57,6 @@ int main() {
     world.add(make_shared<Sphere>(Vec3(4, 1, 0), 1.0, material3));
 
     // Camera
-    Camera cam{ 16.0 / 9.0, 854, 10, 10, 20, { 13, 2, 3 }, { 0, 0, 0 }, { 0, 1, 0 }, 0.6, 10.0 };
+    Camera cam{ 16.0 / 9.0, 1200, 500, 50, 20, { 13, 2, 3 }, { 0, 0, 0 }, { 0, 1, 0 }, 0.6, 10.0 };
     cam.render(world);
 }
