@@ -3,11 +3,23 @@
 #include "utility.h"
 #include "material.h"
 
-Camera::Camera(double aspectRatio, int imageWidth, int samplesPerPixel, int maxDepth)
+Camera::Camera(double aspectRatio, 
+                int imageWidth, 
+                int samplesPerPixel, 
+                int maxDepth, 
+                double vfov,
+                Vec3 lookfrom,
+                Vec3 lookat,
+                Vec3 up
+)
     : aspectRatio{aspectRatio}, 
         imageWidth{imageWidth}, 
         samplesPerPixel{samplesPerPixel}, 
-        maxDepth{maxDepth} 
+        maxDepth{maxDepth}, 
+        vfov{vfov},
+        lookat{lookat},
+        lookfrom{lookfrom},
+        up{up}
 {}
 
 void Camera::render(const Hittable& world) {
@@ -38,19 +50,26 @@ void Camera::initialise() {
     imageHeight = static_cast<int>(imageWidth / aspectRatio);
     imageHeight = std::max(1, imageHeight);
 
-    centre = { 0, 0, 0 };
+    centre = lookfrom;
 
-    double focalLength = 1.0;
-    double viewportHeight = 2.0;
+    double focalLength = (lookfrom - lookat).length();
+    auto theta = utility::degToRad(vfov);
+    auto h = std::tan(theta / 2);
+    double viewportHeight = 2 * h * focalLength;
     double viewportWidth = viewportHeight * (static_cast<double>(imageWidth) / imageHeight);
 
-    Vec3 viewportU{ viewportWidth, 0, 0};
-    Vec3 viewportV{ 0, -viewportHeight, 0};
+    // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
+    Vec3 w = unit_vector(lookfrom - lookat);
+    Vec3 u = unit_vector(cross(up, w));
+    Vec3 v = cross(w, u);
+
+    Vec3 viewportU = viewportWidth * u;
+    Vec3 viewportV = viewportHeight * -v;
 
     pixelDeltaU = viewportU / imageWidth;
     pixelDeltaV = viewportV / imageHeight;
 
-    Vec3 viewportUpperLeft{ centre - Vec3{0, 0, focalLength } - viewportU / 2 - viewportV / 2};
+    Vec3 viewportUpperLeft{ centre - (focalLength * w) - viewportU / 2 - viewportV / 2};
     pixel00Location = viewportUpperLeft + 0.5 * (pixelDeltaU + pixelDeltaV);
 }
 

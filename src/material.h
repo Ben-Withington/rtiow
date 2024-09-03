@@ -31,4 +31,16 @@ class Metal : public Material {
         bool scatter(const Ray& in, const HitRecord& record, Vec3& attenuation, Ray& scattered) const override;
 };
 
+class Dielectric : public Material {
+    private:
+        double refractionIndex;
+
+        static double reflectance(double cosine, double refractionIndex);
+
+    public:
+        Dielectric(double refractionIndex);
+
+        bool scatter(const Ray& in, const HitRecord& record, Vec3& attenuation, Ray& scattered) const override;
+};
+
 #endif // MATERIAL_H
