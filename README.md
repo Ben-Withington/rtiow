@@ -14,5 +14,9 @@ Example from [12.2 Positionining and Orienting the Camera](https://raytracing.gi
 
 ![Image](res/images/positioning.png "12.2 Positionining and Orienting the Camera")
 
+My finishing render
+
+![Image](res/images/finish.png "RTIOW COMPLETE")
+
 
 

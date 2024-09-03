@@ -17,12 +17,12 @@ int main() {
     HittableList world;
 
     auto ground_material = std::make_shared<Lambertian>(Vec3(0.5, 0.5, 0.5));
-    world.add(make_shared<Sphere>(Vec3(0,-1000,0), 1000, ground_material));
+    world.add(std::make_shared<Sphere>(Vec3(0,-1000,0), 1000, ground_material));
 
     for (int a = -11; a < 11; a++) {
         for (int b = -11; b < 11; b++) {
             auto choose_mat = utility::randomDouble();
-            Vec3 centre(a + 0.9*utility::randomDouble(), 0.2, b + 0.9*utility::randomDouble());
+            Vec3 centre(a + 0.9 * utility::randomDouble(), 0.2, b + 0.9 * utility::randomDouble());
 
             if ((centre - Vec3(4, 0.2, 0)).length() > 0.9) {
                 std::shared_ptr<Material> sphere_material;
@@ -57,6 +57,6 @@ int main() {
     world.add(make_shared<Sphere>(Vec3(4, 1, 0), 1.0, material3));
 
     // Camera
-    Camera cam{ 16.0 / 9.0, 1200, 500, 50, 20, { 13, 2, 3 }, { 0, 0, 0 }, { 0, 1, 0 }, 0.6, 10.0 };
+    Camera cam{ 16.0 / 9.0, 854, 250, 50, 20, { 13, 2, 3 }, { 0, 0, 0 }, { 0, 1, 0 }, 0.6, 10.0 };
     cam.render(world);
 }
