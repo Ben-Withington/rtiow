@@ -10,10 +10,12 @@ class Camera {
                 int imageWidth      = 100, 
                 int samplesPerPixel = 10, 
                 int maxDepth        = 10, 
-                double vfov         = 90,
+                double vfov         = 90.0,
                 Vec3 lookfrom       = { 0, 0, 0 },
                 Vec3 lookat         = { 0, 0, 0 },
-                Vec3 up             = { 0, 1, 0 }
+                Vec3 up             = { 0, 1, 0 },
+                double defocusAngle = 0.0,
+                double focusDist    = 10.0
         );
 
         void render(const Hittable& world);
@@ -32,11 +34,16 @@ class Camera {
         Vec3 lookfrom;
         Vec3 lookat;
         Vec3 up;
+        double defocusAngle;
+        double focusDist;
+        Vec3 defocusDiskU;
+        Vec3 defocusDiskV;
 
         void initialise();
         Vec3 rayColour(const Ray& r, const Hittable& world, int depth) const;
         Ray getRay(int i, int j) const;
         Vec3 sampleSqure() const;
+        Vec3 defocusDiskSample() const;
 };
 
 #endif // CAMERA_H

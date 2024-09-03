@@ -10,7 +10,9 @@ Camera::Camera(double aspectRatio,
                 double vfov,
                 Vec3 lookfrom,
                 Vec3 lookat,
-                Vec3 up
+                Vec3 up,
+                double defocusAngle,
+                double focusDist
 )
     : aspectRatio{aspectRatio}, 
         imageWidth{imageWidth}, 
@@ -19,7 +21,9 @@ Camera::Camera(double aspectRatio,
         vfov{vfov},
         lookat{lookat},
         lookfrom{lookfrom},
-        up{up}
+        up{up},
+        defocusAngle{defocusAngle},
+        focusDist{focusDist}
 {}
 
 void Camera::render(const Hittable& world) {
@@ -52,10 +56,9 @@ void Camera::initialise() {
 
     centre = lookfrom;
 
-    double focalLength = (lookfrom - lookat).length();
     auto theta = utility::degToRad(vfov);
     auto h = std::tan(theta / 2);
-    double viewportHeight = 2 * h * focalLength;
+    double viewportHeight = 2 * h * focusDist;
     double viewportWidth = viewportHeight * (static_cast<double>(imageWidth) / imageHeight);
 
     // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
@@ -69,8 +72,12 @@ void Camera::initialise() {
     pixelDeltaU = viewportU / imageWidth;
     pixelDeltaV = viewportV / imageHeight;
 
-    Vec3 viewportUpperLeft{ centre - (focalLength * w) - viewportU / 2 - viewportV / 2};
+    Vec3 viewportUpperLeft{ centre - (focusDist * w) - viewportU / 2 - viewportV / 2};
     pixel00Location = viewportUpperLeft + 0.5 * (pixelDeltaU + pixelDeltaV);
+
+    double defocusRadius = focusDist * std::tan(utility::degToRad(defocusAngle / 2));
+    defocusDiskU = u * defocusRadius;
+    defocusDiskV = v * defocusRadius;
 }
 
 Vec3 Camera::rayColour(const Ray &r, const Hittable &world, int depth) const
@@ -100,9 +107,18 @@ Ray Camera::getRay(int i, int j) const
                         + ((i + offset.x()) * pixelDeltaU) 
                         + ((j + offset.x()) * pixelDeltaV);
     
-    return {centre, pixelSample - centre};
+    Vec3 rayOrigin = (defocusAngle <= 0) ? this->centre : defocusDiskSample();
+    Vec3 rayDirection = pixelSample - this->centre;
+
+    return {rayOrigin, rayDirection};
 }
 
 Vec3 Camera::sampleSqure() const {
     return { utility::randomDouble() - 0.5, utility::randomDouble() - 0.5, 0};
+}
+
+Vec3 Camera::defocusDiskSample() const
+{
+    auto p = randomInUnitDisk();
+    return this->centre + (p[0] * this->defocusDiskU) + (p[1] * this->defocusDiskV);
 }

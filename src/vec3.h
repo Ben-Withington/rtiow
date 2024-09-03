@@ -4,6 +4,8 @@
 #include <iostream>
 #include <cmath>
 
+#include "utility.h"
+
 class Vec3 {
 private:
     double vertices[3];
@@ -73,6 +75,14 @@ inline Vec3 cross(const Vec3& u, const Vec3& v) {
 
 inline Vec3 unit_vector(const Vec3& vec) {
     return vec / vec.length();
+}
+
+inline Vec3 randomInUnitDisk() {
+    while(true) {
+        auto p = Vec3{ utility::randomDouble(-1, 1), utility::randomDouble(-1, 1), 0 };
+        if(p.length_squared() < 1)
+            return p;
+    }
 }
 
 inline Vec3 randomUnitVector() {
