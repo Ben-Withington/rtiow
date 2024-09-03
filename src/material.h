@@ -23,9 +23,10 @@ class Lambertian : public Material {
 class Metal : public Material {
     private:
         Vec3 albedo;
+        double fuzz;
 
     public:
-        Metal(const Vec3& albedo);
+        Metal(const Vec3& albedo, double fuzz = 0.0);
 
         bool scatter(const Ray& in, const HitRecord& record, Vec3& attenuation, Ray& scattered) const override;
 };
